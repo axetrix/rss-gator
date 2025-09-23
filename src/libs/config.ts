@@ -1,5 +1,6 @@
 import fs from "fs";
-import { fileURLToPath } from "url";
+import os from "os";
+// import { fileURLToPath } from "url";
 import path from "path";
 
 type ConfigRaw = {
@@ -13,7 +14,8 @@ type Config = {
 };
 
 function getConfigFilePath(): string {
-  return path.join(path.dirname(fileURLToPath(import.meta.url)), '../', '.gatorconfig.json');
+  // return path.join(path.dirname(fileURLToPath(import.meta.url)), '../', '.gatorconfig.json');
+  return path.join(os.homedir(), '.gatorconfig.json');
 }
 
 function tryConfigTransform(config: any): Config {
