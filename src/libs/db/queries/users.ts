@@ -20,3 +20,20 @@ export async function getUserByName(name: string): Promise<User | null> {
 
   return result;
 }
+
+export async function getUsers(): Promise<User[]> {
+  const result = await db.select().from(users);
+
+  return result;
+}
+
+export async function removeAllUsers(): Promise<boolean> {
+  try {
+    await db.delete(users).returning();
+  } catch (error) {
+    console.error('Error removing users:', error);
+    return false;
+  }
+
+  return true;
+}

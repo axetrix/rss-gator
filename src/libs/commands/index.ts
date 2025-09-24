@@ -1,9 +1,36 @@
 
 
-import { getUserByName, createUser } from '../db/queries/users';
-import { setUser } from '../config';
+import { getUserByName, createUser, removeAllUsers, getUsers } from '../db/queries/users';
+import { setUser, getCurrentUser } from '../config';
+import { fetchFeed } from '../rss';
 
 import type { CommandHandler, CommandsRegistry } from './types';
+
+async function handleReset(cmdName: string) {
+  const userHasRemoved = await removeAllUsers();
+
+  if (!userHasRemoved) {
+    console.error(`Users has not been removed`);
+    process.exit(1);
+  }
+
+  console.log('Users successfully removed');
+}
+
+async function handleUsers(cmdName: string) {
+  const users = await getUsers();
+
+  if (users.length === 0) {
+    console.error(`No users found`);
+    process.exit(1);
+  }
+
+  const currentUser = getCurrentUser();
+
+  users.forEach((user) => {
+      console.log(`* ${user.name}`, user.name === currentUser ? `(current)` : ``);
+  });
+}
 
 async function handleLogin(cmdName: string, ...args: string[]) {
   if (args.length === 0) {
@@ -42,6 +69,25 @@ async function handleRegister(cmdName: string, ...args: string[]) {
   console.log('Register user as', args[0]);
 }
 
+async function handleAgg(cmdName: string, ...args: string[]) {
+  let channelUrl = args[0];
+
+  if (!channelUrl) {
+    channelUrl = "https://www.wagslane.dev/index.xml";
+    // console.error('Usage: agg <channel url>');
+    // process.exit(1);
+  }
+
+  try {
+    const feed = await fetchFeed(channelUrl);
+
+    console.log(feed)
+  } catch (error) {
+    console.error(`Error fetching feed ${args[0]}: ${error}`);
+    process.exit(1);
+  }
+}
+
 export function registerCommand(registry: CommandsRegistry, cmdName: string, handler: CommandHandler) {
   registry[cmdName] = handler;
 }
@@ -51,6 +97,9 @@ export function init(): CommandsRegistry {
 
   registerCommand(registry, 'login', handleLogin);
   registerCommand(registry, 'register', handleRegister);
+  registerCommand(registry, 'reset', handleReset);
+  registerCommand(registry, 'users', handleUsers);
+  registerCommand(registry, 'agg', handleAgg);
 
   return registry;
 }

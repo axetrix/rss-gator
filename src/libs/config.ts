@@ -89,3 +89,15 @@ export function setUser(user: string): Config {
     throw error;
   }
 }
+
+export function getCurrentUser(): string {
+  try {
+    const config = readConfig();
+
+    return config.currentUserName;
+  } catch (error) {
+    console.error('Error setting user:', error);
+
+    throw error;
+  }
+}
