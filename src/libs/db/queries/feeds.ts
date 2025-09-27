@@ -1,4 +1,4 @@
-import { eq, getTableColumns } from "drizzle-orm";
+import { and, eq, getTableColumns } from "drizzle-orm";
 
 import { db } from "..";
 import { feeds, users, feedFollows, Feed, User, FeedDTO, FeedFollows, FeedFollowsDTO } from "../schema";
@@ -65,4 +65,15 @@ export async function getFeedFollowsByUserId(user_id: string): Promise<FeedFollo
     .where(eq(feedFollows.user_id, user_id));
 
   return feedFollowsPopulated;
+}
+
+export async function removeFeedFollow(user_id: string, feed_id: string): Promise<boolean> {
+  try {
+    await db.delete(feedFollows).where(and(eq(feedFollows.user_id, user_id), eq(feedFollows.feed_id, feed_id)))
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+
+  return true;
 }

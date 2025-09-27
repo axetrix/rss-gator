@@ -1,31 +1,50 @@
+import {
+  handleAddFeed,
+  handleAgg,
+  handleFeeds,
+  handleFollow,
+  handleCurrentUserFollowing,
+  handleUnfollow,
+} from "./feeds";
+import { handleLogin, handleRegister, handleReset, handleUsers } from "./users";
+import { middlewareLoggedIn } from "../middlewares/login-middleware";
 
+import type { CommandHandler, CommandsRegistry } from "./types";
 
-import { handleAddFeed, handleAgg, handleFeeds, handleFollow, handleCurrentUserFollowing } from './feeds';
-import { handleLogin, handleRegister, handleReset, handleUsers } from './users';
-
-import type { CommandHandler, CommandsRegistry } from './types';
-
-export function registerCommand(registry: CommandsRegistry, cmdName: string, handler: CommandHandler) {
+export function registerCommand(
+  registry: CommandsRegistry,
+  cmdName: string,
+  handler: CommandHandler,
+) {
   registry[cmdName] = handler;
 }
 
 export function init(): CommandsRegistry {
   const registry: CommandsRegistry = {};
 
-  registerCommand(registry, 'login', handleLogin);
-  registerCommand(registry, 'register', handleRegister);
-  registerCommand(registry, 'reset', handleReset);
-  registerCommand(registry, 'users', handleUsers);
-  registerCommand(registry, 'agg', handleAgg);
-  registerCommand(registry, 'addfeed', handleAddFeed);
-  registerCommand(registry, 'feeds', handleFeeds);
-  registerCommand(registry, 'follow', handleFollow);
-  registerCommand(registry, 'following', handleCurrentUserFollowing);
+  registerCommand(registry, "login", handleLogin);
+  registerCommand(registry, "register", handleRegister);
+  registerCommand(registry, "reset", handleReset);
+  registerCommand(registry, "users", handleUsers);
+  registerCommand(registry, "agg", handleAgg);
+  registerCommand(registry, "addfeed", middlewareLoggedIn(handleAddFeed));
+  registerCommand(registry, "feeds", handleFeeds);
+  registerCommand(registry, "follow", middlewareLoggedIn(handleFollow));
+  registerCommand(
+    registry,
+    "following",
+    middlewareLoggedIn(handleCurrentUserFollowing),
+  );
+  registerCommand(registry, "unfollow", middlewareLoggedIn(handleUnfollow));
 
   return registry;
 }
 
-export async function runCommand(registry: CommandsRegistry, cmdName: string, ...args: string[]): Promise<void> {
+export async function runCommand(
+  registry: CommandsRegistry,
+  cmdName: string,
+  ...args: string[]
+): Promise<void> {
   const handler = registry[cmdName];
 
   if (!handler) {
