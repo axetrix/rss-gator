@@ -1,6 +1,6 @@
 
 
-import { handleAddFeed, handleAgg, handleFeeds } from './feeds';
+import { handleAddFeed, handleAgg, handleFeeds, handleFollow, handleCurrentUserFollowing } from './feeds';
 import { handleLogin, handleRegister, handleReset, handleUsers } from './users';
 
 import type { CommandHandler, CommandsRegistry } from './types';
@@ -19,6 +19,8 @@ export function init(): CommandsRegistry {
   registerCommand(registry, 'agg', handleAgg);
   registerCommand(registry, 'addfeed', handleAddFeed);
   registerCommand(registry, 'feeds', handleFeeds);
+  registerCommand(registry, 'follow', handleFollow);
+  registerCommand(registry, 'following', handleCurrentUserFollowing);
 
   return registry;
 }
