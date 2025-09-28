@@ -1,0 +1,1 @@
+ALTER TABLE "posts" ALTER COLUMN "published_at" SET DATA TYPE timestamp with time zone;

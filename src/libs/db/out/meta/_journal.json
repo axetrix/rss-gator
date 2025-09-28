@@ -22,6 +22,34 @@
       "when": 1759004298466,
       "tag": "0002_crazy_night_thrasher",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1759017632113,
+      "tag": "0003_slow_gorgon",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1759053905160,
+      "tag": "0004_square_sabretooth",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1759078206188,
+      "tag": "0005_eminent_fantastic_four",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1759078507465,
+      "tag": "0006_spicy_spitfire",
+      "breakpoints": true
     }
   ]
 }

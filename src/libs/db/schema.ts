@@ -4,8 +4,8 @@ export type User = typeof users.$inferSelect;
 
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom().notNull(),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-  updatedAt: timestamp("updated_at")
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
     .defaultNow()
     .$onUpdate(() => new Date()),
@@ -17,11 +17,12 @@ export type Feed = typeof feeds.$inferSelect;
 
 export const feeds = pgTable("feeds", {
   id: uuid("id").primaryKey().defaultRandom().notNull(),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-  updatedAt: timestamp("updated_at")
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
     .defaultNow()
     .$onUpdate(() => new Date()),
+  lastFetchedAt: timestamp("last_fetched_at", { withTimezone: true }),
   name: text("name").notNull(),
   url: text("url").notNull().unique(),
 });
@@ -29,8 +30,8 @@ export const feeds = pgTable("feeds", {
 export const feedFollows = pgTable("feed_follows",
   {
     id: uuid("id").primaryKey().defaultRandom().notNull(),
-    createdAt: timestamp("created_at").notNull().defaultNow(),
-    updatedAt: timestamp("updated_at")
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
       .notNull()
       .defaultNow()
       .$onUpdate(() => new Date()),
@@ -44,3 +45,22 @@ export const feedFollows = pgTable("feed_follows",
 
 export type FeedFollowsDTO = typeof feedFollows.$inferInsert;
 export type FeedFollows = typeof feedFollows.$inferSelect;
+
+export const posts = pgTable("posts",
+  {
+    id: uuid("id").primaryKey().defaultRandom().notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+    title: text("title").notNull(),
+    url: text("url").notNull().unique(),
+    description: text("description").notNull(),
+    publishedAt: timestamp("published_at", { withTimezone: true }).notNull(),
+    feed_id: uuid("feed_id").notNull().references(() => feeds.id, { onDelete: "cascade" }),
+  },
+);
+
+export type PostDTO = typeof posts.$inferInsert;
+export type Post = typeof posts.$inferSelect;

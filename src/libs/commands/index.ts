@@ -5,6 +5,8 @@ import {
   handleFollow,
   handleCurrentUserFollowing,
   handleUnfollow,
+  handleScrapeFeed,
+  handleBrowse
 } from "./feeds";
 import { handleLogin, handleRegister, handleReset, handleUsers } from "./users";
 import { middlewareLoggedIn } from "../middlewares/login-middleware";
@@ -36,6 +38,8 @@ export function init(): CommandsRegistry {
     middlewareLoggedIn(handleCurrentUserFollowing),
   );
   registerCommand(registry, "unfollow", middlewareLoggedIn(handleUnfollow));
+  registerCommand(registry, "scrape", middlewareLoggedIn(handleScrapeFeed));
+  registerCommand(registry, "browse", middlewareLoggedIn(handleBrowse));
 
   return registry;
 }
