@@ -1,5 +1,7 @@
 ## Requirements
 
+RSS-Gator app, it's a gator command line interface for managing RSS feeds.
+
 To run this CLI, you'll need:
 
 - Node.js (version 22 or higher)
